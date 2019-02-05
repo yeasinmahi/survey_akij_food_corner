@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -23,6 +23,27 @@ public class MainActivity extends AppCompatActivity {
     private AdView adView;
     private AdRequest adRequest;
     private InterstitialAd interstitial;
+
+    //start internet connection dialogue
+    public static boolean isConnected(Context context) {
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netinfo = cm.getActiveNetworkInfo();
+
+        if (netinfo != null && netinfo.isConnectedOrConnecting()) {
+            android.net.NetworkInfo wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            android.net.NetworkInfo mobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+            if ((mobile != null && mobile.isConnectedOrConnecting()) || (wifi != null && wifi.isConnectedOrConnecting())) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     public void displayInterstitial() {
         if (interstitial.isLoaded()) {
@@ -87,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (isConnected()) {
                     view.loadUrl(url);
-                    if (url.contains("http://shatpach.com/Items/CartSummary")) {
+                    if (false) {
                         loadInterstialAd();
                     }
                 } else {
@@ -105,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         if (!isConnected(this)) {
             buildDialog(MainActivity.this).show();
         } else {
-            Toast.makeText(MainActivity.this, "Welcome To survey!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Welcome To Food Survey !!", Toast.LENGTH_SHORT).show();
             // setContentView(R.layout.activity_main);
             webView = (WebView) findViewById(R.id.webView);
 
@@ -113,31 +133,9 @@ public class MainActivity extends AppCompatActivity {
             webView.setWebViewClient(mWebClient);
             WebSettings webSettings = webView.getSettings();
             webSettings.setJavaScriptEnabled(true);
-            webView.loadUrl("http://shatpach.com");
+            webView.loadUrl("https://survey.akij.net/Feedback-fc.html");
         }
         //end checking internet connection
-    }
-
-
-    //start internet connection dialogue
-    public static boolean isConnected(Context context) {
-
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netinfo = cm.getActiveNetworkInfo();
-
-        if (netinfo != null && netinfo.isConnectedOrConnecting()) {
-            android.net.NetworkInfo wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-            android.net.NetworkInfo mobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-
-            if ((mobile != null && mobile.isConnectedOrConnecting()) || (wifi != null && wifi.isConnectedOrConnecting())) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-
     }
 
     public AlertDialog.Builder buildDialog(Context c) {
