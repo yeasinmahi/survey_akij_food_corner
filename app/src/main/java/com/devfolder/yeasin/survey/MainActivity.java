@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (NetworkUtility.isConnected(MainActivity.this)) {
                     view.loadUrl(url);
+                    view.reload();
                     if (true) {
                         InterstitialAd interstitial = new InterstitialAd(MainActivity.this);
                         interstitial.setAdUnitId(getString(R.string.interstitial_id));
@@ -92,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
             webView.setWebViewClient(mWebClient);
             WebSettings webSettings = webView.getSettings();
             webSettings.setJavaScriptEnabled(true);
+            webSettings.setLoadWithOverviewMode(true);
+            webSettings.setUseWideViewPort(true);
+            webView.setInitialScale(50);
+            webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+            webView.setScrollbarFadingEnabled(true);
             webView.setWebChromeClient(new WebChromeClient(){
                 @Override
                 public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
@@ -109,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             });
-            webView.loadUrl("https://survey.akij.net/Feedback-fc.html");
+            webView.loadUrl("http://survey.akij.net/Feedback-fc.html");
         }
         //end checking internet connection
     }
